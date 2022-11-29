@@ -10,7 +10,7 @@ export function App() {
     <>
       <Section title="Phonebook">
         <ContactForm />
-        {/* <Filter/> */}
+        <Filter/>
       </Section>
       <Section title="Contacts">
         <ContactList />

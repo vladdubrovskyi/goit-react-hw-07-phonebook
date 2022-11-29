@@ -1,46 +1,56 @@
-import {StyledList} from "components/CommonStyled/List.styled"
+import React from 'react'
+import { StyledList } from "components/CommonStyled/List.styled"
 import {StyledListItem} from "components/CommonStyled/ListItem.styled"
 import {StyledRemoveBtn} from "components/ContactList/BtnRemove.styled"
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from "react-redux";
-import { deleteContact } from "../../redux/contactSlice"
 import { useEffect } from "react";
-import { fetchContactsOperations } from "redux/contactsOperations"
-import { getContacts } from "redux/selectors";
+import { fetchContactsOperations, deleteContact } from "redux/contactsOperations"
+import { getContacts, getError, getIsLoading, getStatusFilter } from "redux/selectors";
 
 
 export const ContactList = () => {
-     const contacts = useSelector(getContacts);    
-    // const filter = useSelector(state => state.filter.value);    
-
-
-// const getFilteredContacts = () => {                                               
-//         const normalizedFilter = filter.toLowerCase();
-//         return contacts.filter(contact => contact.name.toLowerCase().includes(normalizedFilter));
-//       };
-//       const filteredContacts = getFilteredContacts();
-
     const dispatch = useDispatch();
-
-    const delContact = (id) => {
-        dispatch(deleteContact(id));
-  };
-  
-  useEffect(() => {
-    dispatch(fetchContactsOperations())
-  }, [dispatch])
+     const contacts = useSelector(getContacts);    
+   const filterName  = useSelector(getStatusFilter);
+    const error = useSelector(getError);
+    const loading = useSelector(getIsLoading); 
 
 
-  return <StyledList>
-        {contacts.length > 0 && contacts.map(contact =>
+     useEffect(() => { dispatch(fetchContactsOperations()) }, [dispatch]);
+
+    const getFilterContacts = () => {
+        if (!filterName) {
+            return contacts;
+        }
+  let normalizedFilter  = filterName.toLowerCase()
+
+        
+        const filtredContacts = contacts.filter(({ name }) =>
+            name.toLowerCase().includes(normalizedFilter));
+        return filtredContacts;
+    }
+
+    const contactsAfterFilter = getFilterContacts();
+    
+
+
+    return <>
+        {error && <p>{error.message}</p>}
+        {loading && <p> Loading ... </p>}
+        <StyledList>
+        {contactsAfterFilter.length > 0 && contactsAfterFilter.map(contact =>
         {
         return (
         <StyledListItem key={contact.id}>
                 {contact.name}: {contact.number}
-                <StyledRemoveBtn type="button" onClick={() => delContact(contact.id)}>Remove</StyledRemoveBtn>
+                <StyledRemoveBtn type="button" onClick={() => dispatch(deleteContact(contact.id))}>Remove</StyledRemoveBtn>
             </StyledListItem>)
         })}
     </StyledList>
+    </>
+    
+    
     
 }
 
