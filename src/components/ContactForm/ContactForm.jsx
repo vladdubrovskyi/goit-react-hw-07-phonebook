@@ -7,12 +7,12 @@ import { StyledBtn } from "components/CommonStyled/Btn.styled"
 import PropTypes from 'prop-types';
 import { addContact } from "../../redux/contactSlice"
 import { useDispatch, useSelector } from 'react-redux';
-
+import { getContacts } from "redux/selectors";
 
 export function ContactForm() {
  
   
-  const contacts = useSelector(state => state.contacts.items);
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
   
     const onAddContact = ( newContact) => {   

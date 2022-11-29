@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteContact } from "../../redux/contactSlice"
 import { useEffect } from "react";
-import { fetchContactsOperation } from "redux/contactsOperations"
+import { fetchContactsOperations } from "redux/contactsOperations"
+import { getContacts } from "redux/selectors";
 
 
 export const ContactList = () => {
-     const contacts = useSelector(state => state.contacts.items);    
+     const contacts = useSelector(getContacts);    
     // const filter = useSelector(state => state.filter.value);    
 
 
@@ -26,7 +27,7 @@ export const ContactList = () => {
   };
   
   useEffect(() => {
-    dispatch(fetchContactsOperation())
+    dispatch(fetchContactsOperations())
   }, [dispatch])
 
 
